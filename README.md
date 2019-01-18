@@ -24,11 +24,48 @@ Let's first import the intRDD we created earlier and tranform the elements using
 
 
 ```python
-# Include the code from previous lab to create an intRDD[1,2,..,1000]
-
-# Code here 
-
+import pyspark 
+sc = pyspark.SparkContext('local[*]')
+intRDD = sc.parallelize(range(1,1001),4)
 ```
+
+
+    -------------------------------------------------------------
+
+    Exception                   Traceback (most recent call last)
+
+    <ipython-input-2-535742847123> in <module>()
+          1 import pyspark
+    ----> 2 sc = pyspark.SparkContext('local[*]')
+          3 intRDD = sc.parallelize(range(1,1001),4)
+
+
+    /anaconda3/lib/python3.6/site-packages/pyspark/context.py in __init__(self, master, appName, sparkHome, pyFiles, environment, batchSize, serializer, conf, gateway, jsc, profiler_cls)
+        113         """
+        114         self._callsite = first_spark_call() or CallSite(None, None, None)
+    --> 115         SparkContext._ensure_initialized(self, gateway=gateway, conf=conf)
+        116         try:
+        117             self._do_init(master, appName, sparkHome, pyFiles, environment, batchSize, serializer,
+
+
+    /anaconda3/lib/python3.6/site-packages/pyspark/context.py in _ensure_initialized(cls, instance, gateway, conf)
+        296         with SparkContext._lock:
+        297             if not SparkContext._gateway:
+    --> 298                 SparkContext._gateway = gateway or launch_gateway(conf)
+        299                 SparkContext._jvm = SparkContext._gateway.jvm
+        300 
+
+
+    /anaconda3/lib/python3.6/site-packages/pyspark/java_gateway.py in launch_gateway(conf)
+         92 
+         93             if not os.path.isfile(conn_info_file):
+    ---> 94                 raise Exception("Java gateway process exited before sending its port number")
+         95 
+         96             with open(conn_info_file, "rb") as info:
+
+
+    Exception: Java gateway process exited before sending its port number
+
 
 At this point, we have created an RDD containing a sequence of numbers and split it into a number of partitions. We shall now try to execute basic data manipulation operations on this RDD and inspect the outcome. Data analysis usually requires the analyst to perform certain operations on every element of a dataset. In Spark such analyses tasks are run in parallel to process a subset of data in parallel to other subsets. 
 
